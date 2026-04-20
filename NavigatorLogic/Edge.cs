@@ -2,8 +2,15 @@
 {
     public class Edge
     {
-        public string From { get; set; }
-        public string To { get; set; }
-        public double Length { get; set; }
+        private int From;
+        private int To;
+        private double Length;
+
+        public Edge(int from, int to, double length)
+        {
+            From = from;
+            To = to;
+            Length = length;
+        }
     }
 }

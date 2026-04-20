@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 
 namespace NavigatorLogic
 {
-    internal class Vertex
+    public class Vertex
     {
-        public int id {  get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public string Name { get; set; }
+        private int Id;
+        private double X;
+        private double Y;
+        private string Name;
 
+        public Vertex(int id, double x, double y, string name)
+        {
+            Id = id;
+            X = x;
+            Y = y; 
+            Name = name;
+        }
     }
 }

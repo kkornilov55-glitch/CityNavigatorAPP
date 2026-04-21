@@ -27,6 +27,21 @@ namespace NavigatorForms
 
             var path = logic.Dijkstra(from.Id, to.Id);
             DrawMap(path);
+
+            // Считаем общую длину маршрута
+            double totalDistance = 0;
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                int id1 = path[i].Id;
+                int id2 = path[i + 1].Id;
+
+                // Ищем ребро между соседними вершинами пути (учитываем оба направления)
+                var edge = G.GetEdges().FirstOrDefault(e => (e.From == id1 && e.To == id2) || (e.From == id2 && e.To == id1));
+
+                if (edge != null) totalDistance += edge.Length;
+            }
+            MessageBox.Show("Итоговая длинна маршрута: " + totalDistance + " км", "Приятной дороги!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         }
         private void InitializeComboBoxes()
         {
@@ -99,7 +114,7 @@ namespace NavigatorForms
                 if (!showLabel) continue;
 
                 PointF mid = Transform((v1.X + v2.X) / 2f, (v1.Y + v2.Y) / 2f);
-                g.DrawString($"{edge.Length:F0} км", labelFont, Brushes.Black, mid.X, mid.Y);
+                g.DrawString($"{edge.Length:F1} км", labelFont, Brushes.Black, mid.X, mid.Y);
             }
 
             // === 4. Города поверх всего ===
@@ -111,7 +126,7 @@ namespace NavigatorForms
 
                 if (path != null && path.Count > 0)
                 {
-                    if (v.Id == path[0].Id) brush = Brushes.DarkRed;           // Старт
+                    if (v.Id == path[0].Id) brush = Brushes.DarkRed; // Старт
                     else if (v.Id == path[path.Count - 1].Id) brush = Brushes.DarkGreen; // Финиш
                     else if (path.Any(p => p.Id == v.Id)) brush = Brushes.LightBlue; // Путь
                 }

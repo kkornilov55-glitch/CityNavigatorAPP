@@ -8,12 +8,12 @@ namespace NavigatorLogic
 {
     public class Vertex
     {
-        private int Id;
-        private double X;
-        private double Y;
-        private string Name;
+        public int Id {  get; private set; }
+        public float X { get; private set; }
+        public float Y { get; private set; }
+        public string Name { get; private set; }
 
-        public Vertex(int id, double x, double y, string name)
+        public Vertex(int id, float x, float y, string name)
         {
             Id = id;
             X = x;

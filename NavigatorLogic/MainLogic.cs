@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NavigatorLogic
 {
-    internal class MainLogic
+    public class MainLogic
     {
         public Graph ReadGraphFromFile(string filePath)
         {
@@ -34,13 +34,13 @@ namespace NavigatorLogic
                 //Обрабатываем вершины(Города)
                 if (parts[0] == "V")
                 {
-                    int id; double x, y; string name;
+                    int id; float x, y; string name;
                     try
                     {
                         if (parts.Length < 5) throw new IndexOutOfRangeException(INCORRECT_TOWN);
                         id = int.Parse(parts[1]);
-                        x = double.Parse(parts[2]);
-                        y = double.Parse(parts[3]);
+                        x = float.Parse(parts[2]);
+                        y = float.Parse(parts[3]);
                         //Получаем имя города и сразу проводим валидацию
                         name = parts[4];
                         if (string.IsNullOrEmpty(name))

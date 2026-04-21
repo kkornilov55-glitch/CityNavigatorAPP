@@ -2,9 +2,9 @@
 {
     public class Edge
     {
-        private int From;
-        private int To;
-        private double Length;
+        public int From { get; private set; }
+        public int To { get; private set; }
+        public double Length { get; private set; }
 
         public Edge(int from, int to, double length)
         {

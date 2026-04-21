@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="NavigatorForms/NavigatorForms.csproj" />
   <Project Path="NavigatorLogic/NavigatorLogic.csproj" />
 </Solution>

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             GraphPictureBox = new PictureBox();
-            button1 = new Button();
+            StartButton = new Button();
             FromComboBox = new ComboBox();
             ToComboBox = new ComboBox();
             label1 = new Label();
@@ -41,24 +41,25 @@
             GraphPictureBox.Dock = DockStyle.Top;
             GraphPictureBox.Location = new Point(0, 0);
             GraphPictureBox.Name = "GraphPictureBox";
-            GraphPictureBox.Size = new Size(1039, 417);
+            GraphPictureBox.Size = new Size(1205, 548);
             GraphPictureBox.TabIndex = 0;
             GraphPictureBox.TabStop = false;
             // 
-            // button1
+            // StartButton
             // 
-            button1.Font = new Font("Segoe UI", 18F);
-            button1.Location = new Point(298, 559);
-            button1.Name = "button1";
-            button1.Size = new Size(387, 52);
-            button1.TabIndex = 1;
-            button1.Text = "Найти";
-            button1.UseVisualStyleBackColor = true;
+            StartButton.Font = new Font("Segoe UI", 18F);
+            StartButton.Location = new Point(393, 679);
+            StartButton.Name = "StartButton";
+            StartButton.Size = new Size(387, 52);
+            StartButton.TabIndex = 1;
+            StartButton.Text = "Построить маршрут";
+            StartButton.UseVisualStyleBackColor = true;
+            StartButton.Click += StartButton_Click;
             // 
             // FromComboBox
             // 
             FromComboBox.FormattingEnabled = true;
-            FromComboBox.Location = new Point(298, 508);
+            FromComboBox.Location = new Point(393, 628);
             FromComboBox.Name = "FromComboBox";
             FromComboBox.Size = new Size(151, 28);
             FromComboBox.TabIndex = 2;
@@ -66,7 +67,7 @@
             // ToComboBox
             // 
             ToComboBox.FormattingEnabled = true;
-            ToComboBox.Location = new Point(534, 508);
+            ToComboBox.Location = new Point(629, 628);
             ToComboBox.Name = "ToComboBox";
             ToComboBox.Size = new Size(151, 28);
             ToComboBox.TabIndex = 3;
@@ -75,7 +76,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F);
-            label1.Location = new Point(467, 495);
+            label1.Location = new Point(562, 615);
             label1.Name = "label1";
             label1.Size = new Size(51, 41);
             label1.TabIndex = 4;
@@ -85,14 +86,15 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1039, 651);
+            ClientSize = new Size(1205, 795);
             Controls.Add(label1);
             Controls.Add(ToComboBox);
             Controls.Add(FromComboBox);
-            Controls.Add(button1);
+            Controls.Add(StartButton);
             Controls.Add(GraphPictureBox);
             Name = "KiMapsForm";
             Text = "KiMaps";
+            Resize += KiMapsForm_Resize;
             ((System.ComponentModel.ISupportInitialize)GraphPictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -101,7 +103,7 @@
         #endregion
 
         private PictureBox GraphPictureBox;
-        private Button button1;
+        private Button StartButton;
         private ComboBox FromComboBox;
         private ComboBox ToComboBox;
         private Label label1;

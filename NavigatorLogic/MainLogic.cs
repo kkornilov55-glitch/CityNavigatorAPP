@@ -8,9 +8,8 @@ namespace NavigatorLogic
 {
     public class MainLogic
     {
-        private const int INF = int.MaxValue;
         private Graph G = new Graph();
-        private int[] Parents;
+        private Dictionary<int, int> Parents;
         public Graph ReadGraphFromFile(string filePath)
         {
             const string FORMAT_ERROR = "Неверный формат файла!";
@@ -89,19 +88,19 @@ namespace NavigatorLogic
         /// </summary>
         public List<Vertex> Dijkstra(int from, int to)
         {
-            int N = G.GetVertices().Count;
-            bool[] Visited = new bool[N];
-            double[] Dist = new double[N];
-            Parents = new int[N];
+            var visited = new Dictionary<int, bool>();
+            var dist = new Dictionary<int, double>();
+            Parents = new Dictionary<int, int>();
 
-            foreach (Vertex V in G.GetVertices())
+            // Инициализация всех вершин
+            foreach (Vertex v in G.GetVertices())
             {
-                Visited[V.Id] = false;
-                Dist[V.Id] = double.MaxValue;
-                Parents[V.Id] = -1;
+                visited[v.Id] = false;
+                dist[v.Id] = double.MaxValue;
+                Parents[v.Id] = -1;
             }
 
-            Dist[from] = 0;
+            dist[from] = 0;
             var pq = new PriorityQueue<int, double>();
             pq.Enqueue(from, 0);
 
@@ -109,23 +108,23 @@ namespace NavigatorLogic
             {
                 int u = pq.Dequeue();
 
-                if (Visited[u]) continue;
-                Visited[u] = true;
-                if (u == to) break; // Кратчайший путь до цели найден
+                if (visited[u]) continue;
+                visited[u] = true;
+                if (u == to) break;
 
                 // Перебор всех рёбер в поиске соседей вершины u
-                foreach (Edge E in G.GetEdges())
+                foreach (Edge e in G.GetEdges())
                 {
                     int v = -1;
-                    if (E.From == u) v = E.To;
-                    else if (E.To == u) v = E.From;
+                    if (e.From == u) v = e.To;
+                    else if (e.To == u) v = e.From;
 
-                    if (v != -1 && !Visited[v])
+                    if (v != -1 && !visited[v])
                     {
-                        double newDist = Dist[u] + E.Length;
-                        if (newDist < Dist[v])
+                        double newDist = dist[u] + e.Length;
+                        if (newDist < dist[v])
                         {
-                            Dist[v] = newDist;
+                            dist[v] = newDist;
                             Parents[v] = u;
                             pq.Enqueue(v, newDist);
                         }
@@ -137,15 +136,21 @@ namespace NavigatorLogic
         }
         private List<Vertex> ReconstructPath(int from, int to)
         {
-            List<Vertex> path = new List<Vertex>();
-            if (Parents[to] == -1 && from != to) return path; // Путь не найден
+            var path = new List<Vertex>();
+
+            // Если родителей нет или путь не найден
+            if (!Parents.ContainsKey(to) || Parents[to] == -1 && from != to)
+                return path;
 
             int current = to;
-            while (current != -1)
+            while (current != -1 && Parents.ContainsKey(current))
             {
-                path.Add(G.GetVertices().FirstOrDefault(v => v.Id == current));
+                var vertex = G.GetVertices().FirstOrDefault(v => v.Id == current);
+                if (vertex == null) break;
+                path.Add(vertex);
                 current = Parents[current];
             }
+
             path.Reverse();
             return path;
         }

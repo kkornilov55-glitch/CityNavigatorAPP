@@ -41,16 +41,16 @@
             GraphPictureBox.Dock = DockStyle.Top;
             GraphPictureBox.Location = new Point(0, 0);
             GraphPictureBox.Name = "GraphPictureBox";
-            GraphPictureBox.Size = new Size(1205, 548);
+            GraphPictureBox.Size = new Size(1494, 777);
             GraphPictureBox.TabIndex = 0;
             GraphPictureBox.TabStop = false;
             // 
             // StartButton
             // 
             StartButton.Font = new Font("Segoe UI", 18F);
-            StartButton.Location = new Point(393, 679);
+            StartButton.Location = new Point(588, 783);
             StartButton.Name = "StartButton";
-            StartButton.Size = new Size(387, 52);
+            StartButton.Size = new Size(368, 52);
             StartButton.TabIndex = 1;
             StartButton.Text = "Построить маршрут";
             StartButton.UseVisualStyleBackColor = true;
@@ -59,24 +59,24 @@
             // FromComboBox
             // 
             FromComboBox.FormattingEnabled = true;
-            FromComboBox.Location = new Point(393, 628);
+            FromComboBox.Location = new Point(191, 796);
             FromComboBox.Name = "FromComboBox";
-            FromComboBox.Size = new Size(151, 28);
+            FromComboBox.Size = new Size(132, 28);
             FromComboBox.TabIndex = 2;
             // 
             // ToComboBox
             // 
             ToComboBox.FormattingEnabled = true;
-            ToComboBox.Location = new Point(629, 628);
+            ToComboBox.Location = new Point(427, 796);
             ToComboBox.Name = "ToComboBox";
-            ToComboBox.Size = new Size(151, 28);
+            ToComboBox.Size = new Size(132, 28);
             ToComboBox.TabIndex = 3;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F);
-            label1.Location = new Point(562, 615);
+            label1.Location = new Point(354, 783);
             label1.Name = "label1";
             label1.Size = new Size(51, 41);
             label1.TabIndex = 4;
@@ -86,7 +86,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1205, 795);
+            ClientSize = new Size(1494, 841);
             Controls.Add(label1);
             Controls.Add(ToComboBox);
             Controls.Add(FromComboBox);

@@ -12,10 +12,14 @@ namespace NavigatorForms
         private float offsetX = 0f;
         private float offsetY = 0f;
         private bool transformReady = false;
+
+        //Для больших графов
+        private const int MAX_TOWNS_TO_SHOW_LENGTHS = 15;
+        private bool showLengths = true;
         public KiMapsForm()
         {
             InitializeComponent();
-            G = logic.ReadGraphFromFile("C:\\Main\\Works\\Labs\\2_term\\AL_AND_PROG\\Курсач 17 тема\\CityNavigator\\Graphs\\testGraph.txt");
+            LoadMap();
             CalculateTransform();
             InitializeComboBoxes();
             DrawMap();
@@ -110,7 +114,7 @@ namespace NavigatorForms
                 var v2 = vertices.FirstOrDefault(v => v.Id == edge.To);
                 if (v1 == null || v2 == null) continue;
 
-                bool showLabel = (path == null) || EdgeInPath(path, v1, v2);
+                bool showLabel = (path == null & showLengths) || (path != null && EdgeInPath(path, v1, v2));
                 if (!showLabel) continue;
 
                 PointF mid = Transform((v1.X + v2.X) / 2f, (v1.Y + v2.Y) / 2f);
@@ -198,6 +202,38 @@ namespace NavigatorForms
         {
             transformReady = false;
             if (G != null) DrawMap();
+        }
+
+        private void LoadMap()
+        {
+            try
+            {
+                var OFD = new OpenFileDialog
+                {
+                    Title = "Выберите текстовый файл",
+                    Filter = "Текстовые файлы (*.txt)|*.txt",
+                    FilterIndex = 1,
+                    RestoreDirectory = true,
+                    CheckFileExists = true
+                };
+                if (OFD.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = OFD.FileName;
+                    string ext = Path.GetExtension(filePath);
+                    if (ext != ".txt")
+                    {
+                        MessageBox.Show("Чтение расширения выбранного файла не поддерживается!", "Неудача!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    G = logic.ReadGraphFromFile(filePath);
+                    if (G.GetVertices().Count > MAX_TOWNS_TO_SHOW_LENGTHS) showLengths = false;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка, файл с графом не найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
     }
 }

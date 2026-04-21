@@ -8,14 +8,15 @@ namespace NavigatorLogic
 {
     public class MainLogic
     {
+        private const int INF = int.MaxValue;
+        private Graph G = new Graph();
+        private int[] Parents;
         public Graph ReadGraphFromFile(string filePath)
         {
             const string FORMAT_ERROR = "Неверный формат файла!";
             const string TOWN_NAME_ERROR = "Некорректное имя города!";
             const string INCORRECT_TOWN = "Некорректная запись о городе!";
             const string INCORRECT_ROAD = "Некорректная запись о дороге!";
-
-            Graph G = new Graph();
 
             string textLine;
             StreamReader F = new StreamReader(filePath);
@@ -76,11 +77,77 @@ namespace NavigatorLogic
                         throw new Exception(ex.Message);
                     }
                     G.AddEdge(from, to, length);
+                    G.AddEdge(to, from, length);
                 }
                 else throw new FormatException(FORMAT_ERROR);
             }
             F.Close();
             return G;
+        }
+        /// <summary>
+        /// Алгоритм Дейкстры. Принимает id старта и финиша для восстановления пути.
+        /// </summary>
+        public List<Vertex> Dijkstra(int from, int to)
+        {
+            int N = G.GetVertices().Count;
+            bool[] Visited = new bool[N];
+            double[] Dist = new double[N];
+            Parents = new int[N];
+
+            foreach (Vertex V in G.GetVertices())
+            {
+                Visited[V.Id] = false;
+                Dist[V.Id] = double.MaxValue;
+                Parents[V.Id] = -1;
+            }
+
+            Dist[from] = 0;
+            var pq = new PriorityQueue<int, double>();
+            pq.Enqueue(from, 0);
+
+            while (pq.Count > 0)
+            {
+                int u = pq.Dequeue();
+
+                if (Visited[u]) continue;
+                Visited[u] = true;
+                if (u == to) break; // Кратчайший путь до цели найден
+
+                // Перебор всех рёбер в поиске соседей вершины u
+                foreach (Edge E in G.GetEdges())
+                {
+                    int v = -1;
+                    if (E.From == u) v = E.To;
+                    else if (E.To == u) v = E.From;
+
+                    if (v != -1 && !Visited[v])
+                    {
+                        double newDist = Dist[u] + E.Length;
+                        if (newDist < Dist[v])
+                        {
+                            Dist[v] = newDist;
+                            Parents[v] = u;
+                            pq.Enqueue(v, newDist);
+                        }
+                    }
+                }
+            }
+
+            return ReconstructPath(from, to);
+        }
+        private List<Vertex> ReconstructPath(int from, int to)
+        {
+            List<Vertex> path = new List<Vertex>();
+            if (Parents[to] == -1 && from != to) return path; // Путь не найден
+
+            int current = to;
+            while (current != -1)
+            {
+                path.Add(G.GetVertices().FirstOrDefault(v => v.Id == current));
+                current = Parents[current];
+            }
+            path.Reverse();
+            return path;
         }
     }
 }

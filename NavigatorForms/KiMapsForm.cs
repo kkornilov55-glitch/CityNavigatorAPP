@@ -15,7 +15,7 @@ namespace NavigatorForms
 
         //Для больших графов
         private const int MAX_TOWNS_TO_SHOW_LENGTHS = 15;
-        private bool showLengths = true;
+        private bool miniGraph = true;
         public KiMapsForm()
         {
             InitializeComponent();
@@ -114,7 +114,7 @@ namespace NavigatorForms
                 var v2 = vertices.FirstOrDefault(v => v.Id == edge.To);
                 if (v1 == null || v2 == null) continue;
 
-                bool showLabel = (path == null & showLengths) || (path != null && EdgeInPath(path, v1, v2));
+                bool showLabel = (path == null & miniGraph) || (path != null && EdgeInPath(path, v1, v2));
                 if (!showLabel) continue;
 
                 PointF mid = Transform((v1.X + v2.X) / 2f, (v1.Y + v2.Y) / 2f);
@@ -122,7 +122,7 @@ namespace NavigatorForms
             }
 
             // === 4. Города поверх всего ===
-            int radius = (int)(7 * scale);
+            int radius = 5;
             foreach (Vertex v in vertices)
             {
                 PointF pos = Transform(v.X, v.Y);
@@ -180,8 +180,8 @@ namespace NavigatorForms
             if (graphWidth == 0) graphWidth = 1;
             if (graphHeight == 0) graphHeight = 1;
 
-            // Вычисляем масштаб с отступами 10%
-            float padding = 0.1f;
+            // Вычисляем масштаб с отступами 17%
+            float padding = 0.17f;
             float scaleX = (GraphPictureBox.Width * (1 - padding)) / graphWidth;
             float scaleY = (GraphPictureBox.Height * (1 - padding)) / graphHeight;
             scale = Math.Min(scaleX, scaleY); // Единый масштаб по обоим осям
@@ -226,7 +226,7 @@ namespace NavigatorForms
                         return;
                     }
                     G = logic.ReadGraphFromFile(filePath);
-                    if (G.GetVertices().Count > MAX_TOWNS_TO_SHOW_LENGTHS) showLengths = false;
+                    if (G.GetVertices().Count > MAX_TOWNS_TO_SHOW_LENGTHS) miniGraph = false;
                 }
             }
             catch

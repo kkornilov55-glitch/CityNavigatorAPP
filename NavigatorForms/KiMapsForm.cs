@@ -30,34 +30,57 @@ namespace NavigatorForms
             Vertex from = G.GetVertices().FirstOrDefault(v => v.Name == FromComboBox.SelectedItem.ToString());
             Vertex to = G.GetVertices().FirstOrDefault(v => v.Name == ToComboBox.SelectedItem.ToString());
 
-            var path = logic.Dijkstra(from.Id, to.Id, FastestWayCheckBox.Checked);
-            lastPath = path;
-            DrawMap(path);
+            if (from == null || to == null) return;
 
-            // Считаем общую длину маршрута
+            // 1. Находим основной путь
+            var path1 = logic.Dijkstra(from.Id, to.Id, FastestWayCheckBox.Checked);
+            lastPath = path1;
+
+            // 2. Находим альтернативный путь (в обход самой длинной дороги)
+            var path2 = logic.FindAlternativePath(from.Id, to.Id, path1, FastestWayCheckBox.Checked);
+
+            WayRichTextBox.Text = string.Join(" -> ", path1.Select(v => v.Name));
+            // Отрисовываем основной путь (пока что)
+            DrawMap(path1);
+
+
+            // 3. Считаем статистику для обоих путей
+            string stats1 = GetPathStats(path1);
+            string stats2 = path2.Count > 1 ? GetPathStats(path2) : "Альтернативный путь не найден.";
+
+            // 4. Выводим результат
+            string message = $"ОСНОВНОЙ МАРШРУТ:\n{stats1}\n\n" +
+                             $"АЛЬТЕРНАТИВНЫЙ:\n{stats2}";
+
+            MessageBox.Show(message, "Результаты навигации", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        // Вспомогательный метод для подсчета длины и времени пути
+        private string GetPathStats(List<Vertex> path)
+        {
+            if (path == null || path.Count < 2) return "Путь не найден";
+
             double totalDistance = 0;
             double totalMinutes = 0;
+
             for (int i = 0; i < path.Count - 1; i++)
             {
                 int id1 = path[i].Id;
                 int id2 = path[i + 1].Id;
 
-                // Ищем ребро между соседними вершинами пути (учитываем оба направления)
-                var edge = G.GetEdges().FirstOrDefault(e => (e.From == id1 && e.To == id2) || (e.From == id2 && e.To == id1));
+                var edge = G.GetEdges().FirstOrDefault(e =>
+                    (e.From == id1 && e.To == id2) || (e.From == id2 && e.To == id1));
 
                 if (edge != null)
                 {
                     totalDistance += edge.Length;
-                    totalMinutes += edge.TimeMins;
+                    totalMinutes += edge.TimeMins; // Убедись, что у Edge есть свойство TimeMins
                 }
             }
+
             int hours = (int)(totalMinutes / 60);
             int minutes = (int)(totalMinutes % 60);
-            MessageBox.Show(
-                $"Дистанция: {totalDistance:F1} км\n" +
-                $"Время в пути: {hours} ч {minutes} мин",
-                "Маршрут построен!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //MessageBox.Show("Итоговая длинна маршрута: " + totalDistance + " км", "Приятной дороги!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            return $"Дистанция: {totalDistance:F1} км\nВремя: {hours} ч {minutes:D2} мин";
         }
         private void AltButton_Click(object sender, EventArgs e)
         {
@@ -72,6 +95,7 @@ namespace NavigatorForms
 
             // Ищем альтернативу
             var altPath = logic.FindAlternativePath(from.Id, to.Id, lastPath, FastestWayCheckBox.Checked);
+            WayRichTextBox.Text = string.Join(" -> ", altPath.Select(v => v.Name));
 
             if (altPath.Count < 2)
             {
@@ -199,7 +223,7 @@ namespace NavigatorForms
             return false;
         }
 
-        //МАШТАБИЗАЦИЯ ГРАФА
+        //МАCШТАБИЗАЦИЯ ГРАФА
         private void CalculateTransform()
         {
             var vertices = G.GetVertices();
@@ -216,8 +240,8 @@ namespace NavigatorForms
             if (graphWidth == 0) graphWidth = 1;
             if (graphHeight == 0) graphHeight = 1;
 
-            // Вычисляем масштаб с отступами 17%
-            float padding = 0.17f;
+            // Вычисляем масштаб с отступами 23%
+            float padding = 0.23f;
             float scaleX = (GraphPictureBox.Width * (1 - padding)) / graphWidth;
             float scaleY = (GraphPictureBox.Height * (1 - padding)) / graphHeight;
             scale = Math.Min(scaleX, scaleY); // Единый масштаб по обоим осям

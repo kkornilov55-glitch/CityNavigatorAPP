@@ -34,8 +34,9 @@
             ToComboBox = new ComboBox();
             label1 = new Label();
             panel1 = new Panel();
-            FastestWayCheckBox = new CheckBox();
             AltButton = new Button();
+            FastestWayCheckBox = new CheckBox();
+            WayRichTextBox = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)GraphPictureBox).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -100,16 +101,6 @@
             panel1.Size = new Size(1494, 58);
             panel1.TabIndex = 5;
             // 
-            // FastestWayCheckBox
-            // 
-            FastestWayCheckBox.AutoSize = true;
-            FastestWayCheckBox.Location = new Point(10, 17);
-            FastestWayCheckBox.Name = "FastestWayCheckBox";
-            FastestWayCheckBox.Size = new Size(179, 24);
-            FastestWayCheckBox.TabIndex = 5;
-            FastestWayCheckBox.Text = "Самый быстрый путь";
-            FastestWayCheckBox.UseVisualStyleBackColor = true;
-            // 
             // AltButton
             // 
             AltButton.Font = new Font("Segoe UI", 14F);
@@ -121,11 +112,33 @@
             AltButton.UseVisualStyleBackColor = true;
             AltButton.Click += AltButton_Click;
             // 
+            // FastestWayCheckBox
+            // 
+            FastestWayCheckBox.AutoSize = true;
+            FastestWayCheckBox.Location = new Point(10, 17);
+            FastestWayCheckBox.Name = "FastestWayCheckBox";
+            FastestWayCheckBox.Size = new Size(179, 24);
+            FastestWayCheckBox.TabIndex = 5;
+            FastestWayCheckBox.Text = "Самый быстрый путь";
+            FastestWayCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // WayRichTextBox
+            // 
+            WayRichTextBox.Dock = DockStyle.Bottom;
+            WayRichTextBox.Location = new Point(0, 755);
+            WayRichTextBox.Name = "WayRichTextBox";
+            WayRichTextBox.ReadOnly = true;
+            WayRichTextBox.ScrollBars = RichTextBoxScrollBars.Horizontal;
+            WayRichTextBox.Size = new Size(1494, 28);
+            WayRichTextBox.TabIndex = 7;
+            WayRichTextBox.Text = "";
+            // 
             // KiMapsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1494, 841);
+            Controls.Add(WayRichTextBox);
             Controls.Add(panel1);
             Controls.Add(GraphPictureBox);
             Name = "KiMapsForm";
@@ -147,5 +160,6 @@
         private Panel panel1;
         private CheckBox FastestWayCheckBox;
         private Button AltButton;
+        private RichTextBox WayRichTextBox;
     }
 }

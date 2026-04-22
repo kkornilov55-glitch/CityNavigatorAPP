@@ -29,11 +29,12 @@ namespace NavigatorForms
             Vertex from = G.GetVertices().FirstOrDefault(v => v.Name == FromComboBox.SelectedItem.ToString());
             Vertex to = G.GetVertices().FirstOrDefault(v => v.Name == ToComboBox.SelectedItem.ToString());
 
-            var path = logic.Dijkstra(from.Id, to.Id);
+            var path = logic.Dijkstra(from.Id, to.Id, FastestWayCheckBox.Checked);
             DrawMap(path);
 
             // Считаем общую длину маршрута
             double totalDistance = 0;
+            double totalMinutes = 0;
             for (int i = 0; i < path.Count - 1; i++)
             {
                 int id1 = path[i].Id;
@@ -42,10 +43,19 @@ namespace NavigatorForms
                 // Ищем ребро между соседними вершинами пути (учитываем оба направления)
                 var edge = G.GetEdges().FirstOrDefault(e => (e.From == id1 && e.To == id2) || (e.From == id2 && e.To == id1));
 
-                if (edge != null) totalDistance += edge.Length;
+                if (edge != null)
+                {
+                    totalDistance += edge.Length;
+                    totalMinutes += edge.TimeMins;
+                }
             }
-            MessageBox.Show("Итоговая длинна маршрута: " + totalDistance + " км", "Приятной дороги!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+            int hours = (int)(totalMinutes / 60);
+            int minutes = (int)(totalMinutes % 60);
+            MessageBox.Show(
+                $"Дистанция: {totalDistance:F1} км\n" +
+                $"Время в пути: {hours} ч {minutes} мин",
+                "Маршрут построен!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show("Итоговая длинна маршрута: " + totalDistance + " км", "Приятной дороги!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void InitializeComboBoxes()
         {

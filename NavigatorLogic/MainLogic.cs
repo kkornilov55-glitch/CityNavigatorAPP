@@ -22,8 +22,6 @@ namespace NavigatorLogic
 
             while ((textLine = F.ReadLine()) != null)
             {
-                //textLine = F.ReadLine();
-                //if (string.IsNullOrEmpty(textLine)) break; //Файл прочитан до конца
                 textLine = textLine.Trim();
                 //Скипаем комментарии
                 if (textLine.StartsWith("#"))
@@ -59,13 +57,17 @@ namespace NavigatorLogic
                 //Обрабатываем ребра(Дороги между городами)
                 else if (parts[0] == "E")
                 {
-                    int from, to; double length;
+                    int from, to; 
+                    double length; 
+                    double speed = 45.0;
                     try
                     {
                         if (parts.Length < 4) throw new IndexOutOfRangeException(INCORRECT_ROAD);
                         from = int.Parse(parts[1]);
                         to = int.Parse(parts[2]);
                         length = double.Parse(parts[3]);
+
+                        if (parts.Length >= 5) speed = double.Parse(parts[4]);
                     }
                     catch (FormatException)
                     {
@@ -75,8 +77,8 @@ namespace NavigatorLogic
                     {
                         throw new Exception(ex.Message);
                     }
-                    G.AddEdge(from, to, length);
-                    G.AddEdge(to, from, length);
+                    G.AddEdge(from, to, length, speed);
+                    G.AddEdge(to, from, length, speed);
                 }
                 else throw new FormatException(FORMAT_ERROR);
             }
@@ -86,7 +88,7 @@ namespace NavigatorLogic
         /// <summary>
         /// Алгоритм Дейкстры. Принимает id старта и финиша для восстановления пути.
         /// </summary>
-        public List<Vertex> Dijkstra(int from, int to)
+        public List<Vertex> Dijkstra(int from, int to, bool useTime)
         {
             var visited = new Dictionary<int, bool>();
             var dist = new Dictionary<int, double>();
@@ -121,7 +123,9 @@ namespace NavigatorLogic
 
                     if (v != -1 && !visited[v])
                     {
-                        double newDist = dist[u] + e.Length;
+                        double weight = useTime ? e.TimeMins : e.Length;
+
+                        double newDist = dist[u] + weight;
                         if (newDist < dist[v])
                         {
                             dist[v] = newDist;

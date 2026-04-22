@@ -34,6 +34,7 @@
             ToComboBox = new ComboBox();
             label1 = new Label();
             panel1 = new Panel();
+            FastestWayCheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)GraphPictureBox).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -86,6 +87,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(FastestWayCheckBox);
             panel1.Controls.Add(StartButton);
             panel1.Controls.Add(FromComboBox);
             panel1.Controls.Add(label1);
@@ -95,6 +97,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1494, 58);
             panel1.TabIndex = 5;
+            // 
+            // FastestWayCheckBox
+            // 
+            FastestWayCheckBox.AutoSize = true;
+            FastestWayCheckBox.Location = new Point(948, 21);
+            FastestWayCheckBox.Name = "FastestWayCheckBox";
+            FastestWayCheckBox.Size = new Size(179, 24);
+            FastestWayCheckBox.TabIndex = 5;
+            FastestWayCheckBox.Text = "Самый быстрый путь";
+            FastestWayCheckBox.UseVisualStyleBackColor = true;
             // 
             // KiMapsForm
             // 
@@ -120,5 +132,6 @@
         private ComboBox ToComboBox;
         private Label label1;
         private Panel panel1;
+        private CheckBox FastestWayCheckBox;
     }
 }

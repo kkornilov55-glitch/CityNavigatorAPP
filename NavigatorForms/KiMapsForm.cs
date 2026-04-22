@@ -6,6 +6,7 @@ namespace NavigatorForms
     {
         private MainLogic logic = new MainLogic();
         private Graph G;
+        private List<Vertex> lastPath;
 
         // Для центрирования и масштабирования графа
         private float scale = 1f;
@@ -30,6 +31,7 @@ namespace NavigatorForms
             Vertex to = G.GetVertices().FirstOrDefault(v => v.Name == ToComboBox.SelectedItem.ToString());
 
             var path = logic.Dijkstra(from.Id, to.Id, FastestWayCheckBox.Checked);
+            lastPath = path;
             DrawMap(path);
 
             // Считаем общую длину маршрута
@@ -56,6 +58,30 @@ namespace NavigatorForms
                 $"Время в пути: {hours} ч {minutes} мин",
                 "Маршрут построен!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             //MessageBox.Show("Итоговая длинна маршрута: " + totalDistance + " км", "Приятной дороги!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private void AltButton_Click(object sender, EventArgs e)
+        {
+            if (lastPath == null || lastPath.Count < 2)
+            {
+                MessageBox.Show("Сначала постройте основной маршрут!");
+                return;
+            }
+
+            Vertex from = G.GetVertices().FirstOrDefault(v => v.Name == FromComboBox.SelectedItem.ToString());
+            Vertex to = G.GetVertices().FirstOrDefault(v => v.Name == ToComboBox.SelectedItem.ToString());
+
+            // Ищем альтернативу
+            var altPath = logic.FindAlternativePath(from.Id, to.Id, lastPath, FastestWayCheckBox.Checked);
+
+            if (altPath.Count < 2)
+            {
+                MessageBox.Show("Альтернативный маршрут не найден (нет объезда).");
+            }
+            else
+            {
+                DrawMap(altPath);
+                MessageBox.Show("Найден альтернативный маршрут (в обход главной дороги).");
+            }
         }
         private void InitializeComboBoxes()
         {

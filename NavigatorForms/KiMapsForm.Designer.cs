@@ -35,6 +35,7 @@
             label1 = new Label();
             panel1 = new Panel();
             FastestWayCheckBox = new CheckBox();
+            AltButton = new Button();
             ((System.ComponentModel.ISupportInitialize)GraphPictureBox).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -50,10 +51,10 @@
             // 
             // StartButton
             // 
-            StartButton.Font = new Font("Segoe UI", 18F);
-            StartButton.Location = new Point(554, 6);
+            StartButton.Font = new Font("Segoe UI", 14F);
+            StartButton.Location = new Point(552, 5);
             StartButton.Name = "StartButton";
-            StartButton.Size = new Size(368, 49);
+            StartButton.Size = new Size(265, 43);
             StartButton.TabIndex = 1;
             StartButton.Text = "Построить маршрут";
             StartButton.UseVisualStyleBackColor = true;
@@ -62,7 +63,7 @@
             // FromComboBox
             // 
             FromComboBox.FormattingEnabled = true;
-            FromComboBox.Location = new Point(210, 21);
+            FromComboBox.Location = new Point(208, 17);
             FromComboBox.Name = "FromComboBox";
             FromComboBox.Size = new Size(132, 28);
             FromComboBox.TabIndex = 2;
@@ -70,7 +71,7 @@
             // ToComboBox
             // 
             ToComboBox.FormattingEnabled = true;
-            ToComboBox.Location = new Point(416, 22);
+            ToComboBox.Location = new Point(414, 18);
             ToComboBox.Name = "ToComboBox";
             ToComboBox.Size = new Size(132, 28);
             ToComboBox.TabIndex = 3;
@@ -79,7 +80,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F);
-            label1.Location = new Point(359, 8);
+            label1.Location = new Point(357, 4);
             label1.Name = "label1";
             label1.Size = new Size(51, 41);
             label1.TabIndex = 4;
@@ -87,6 +88,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(AltButton);
             panel1.Controls.Add(FastestWayCheckBox);
             panel1.Controls.Add(StartButton);
             panel1.Controls.Add(FromComboBox);
@@ -101,12 +103,23 @@
             // FastestWayCheckBox
             // 
             FastestWayCheckBox.AutoSize = true;
-            FastestWayCheckBox.Location = new Point(948, 21);
+            FastestWayCheckBox.Location = new Point(10, 17);
             FastestWayCheckBox.Name = "FastestWayCheckBox";
             FastestWayCheckBox.Size = new Size(179, 24);
             FastestWayCheckBox.TabIndex = 5;
             FastestWayCheckBox.Text = "Самый быстрый путь";
             FastestWayCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // AltButton
+            // 
+            AltButton.Font = new Font("Segoe UI", 14F);
+            AltButton.Location = new Point(852, 5);
+            AltButton.Name = "AltButton";
+            AltButton.Size = new Size(169, 43);
+            AltButton.TabIndex = 6;
+            AltButton.Text = "Другой путь";
+            AltButton.UseVisualStyleBackColor = true;
+            AltButton.Click += AltButton_Click;
             // 
             // KiMapsForm
             // 
@@ -133,5 +146,6 @@
         private Label label1;
         private Panel panel1;
         private CheckBox FastestWayCheckBox;
+        private Button AltButton;
     }
 }

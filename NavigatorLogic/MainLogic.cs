@@ -88,7 +88,7 @@ namespace NavigatorLogic
         /// <summary>
         /// Алгоритм Дейкстры. Принимает id старта и финиша для восстановления пути.
         /// </summary>
-        public List<Vertex> Dijkstra(int from, int to, bool useTime)
+        public List<Vertex> Dijkstra(int from, int to, bool useTime, Edge edgeToIgnore = null)
         {
             var visited = new Dictionary<int, bool>();
             var dist = new Dictionary<int, double>();
@@ -117,6 +117,14 @@ namespace NavigatorLogic
                 // Перебор всех рёбер в поиске соседей вершины u
                 foreach (Edge e in G.GetEdges())
                 {
+                    //  БЛОКИРОВКА: Если это та дорога, которую нужно объехать — пропускаем её
+                    if (edgeToIgnore != null)
+                    {
+                        bool isBlocked = (e.From == edgeToIgnore.From && e.To == edgeToIgnore.To) ||
+                                         (e.From == edgeToIgnore.To && e.To == edgeToIgnore.From);
+                        if (isBlocked) continue;
+                    }
+
                     int v = -1;
                     if (e.From == u) v = e.To;
                     else if (e.To == u) v = e.From;
@@ -157,6 +165,43 @@ namespace NavigatorLogic
 
             path.Reverse();
             return path;
+        }
+        /// <summary>
+        /// Находит альтернативный путь, блокируя самый длинный участок основного маршрута.
+        /// </summary>
+        public List<Vertex> FindAlternativePath(int from, int to, List<Vertex> originalPath, bool useTime)
+        {
+            if (originalPath == null || originalPath.Count < 2) return new List<Vertex>();
+
+            Edge longestEdge = null;
+            double maxLen = -1;
+
+            // 1. Ищем самую длинную дорогу на текущем пути
+            for (int i = 0; i < originalPath.Count - 1; i++)
+            {
+                int u = originalPath[i].Id;
+                int v = originalPath[i + 1].Id;
+
+                // Находим объект ребра в графе
+                var edge = G.GetEdges().FirstOrDefault(e =>
+                    (e.From == u && e.To == v) || (e.From == v && e.To == u));
+
+                double weight = useTime ? edge.TimeMins : edge.Length;
+
+                if (edge != null && weight > maxLen)
+                {
+                    maxLen = weight;
+                    longestEdge = edge;
+                }
+            }
+
+            // 2. Если нашли что блокировать — строим путь в обход
+            if (longestEdge != null)
+            {
+                return Dijkstra(from, to, useTime, longestEdge);
+            }
+
+            return new List<Vertex>();
         }
     }
 }

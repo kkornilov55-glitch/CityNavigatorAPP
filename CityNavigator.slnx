@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="NavigatorForms/NavigatorForms.csproj" />
   <Project Path="NavigatorLogic/NavigatorLogic.csproj" />
+  <Project Path="NavigatorNTests/NavigatorNTests.csproj" Id="a0348387-192b-4ccd-bc56-2326ed9dc4b8" />
 </Solution>

@@ -49,12 +49,24 @@ namespace NavigatorForms
                 var path2 = logic.FindAlternativePath(from.Id, to.Id, path, FastestWayCheckBox.Checked);
 
                 //3. Считаем статистику для обоих путей
-                string stats1 = GetPathStats(path);
-                string stats2 = path2.Count > 1 ? GetPathStats(path2) : "Альтернативный путь не найден.";
+                var stats1 = logic.CalculatePathStats(path);
+                var stats2 = logic.CalculatePathStats(path2);
+
+                int hours1 = (int)(stats1.TimeMinutes / 60);
+                int minutes1 = (int)(stats1.TimeMinutes % 60);
+                int hours2 = (int)(stats2.TimeMinutes / 60);
+                int minutes2 = (int)(stats2.TimeMinutes % 60);
 
                 //4. Выводим результат
-                message = $"ОСНОВНОЙ МАРШРУТ:\n{stats1}\n\n" +
-                          $"АЛЬТЕРНАТИВНЫЙ:\n{stats2}";
+                message = $"ОСНОВНОЙ МАРШРУТ:\n" +
+                          $"Дистанция: {stats1.Distance:F1} км\n" +
+                          $"Время в пути: {hours1} ч {minutes1:D2} мин\n" +
+                          $"Количество перекрёсков: {path.Count}\n\n" +
+
+                          $"АЛЬТЕРНАТИВНЫЙ:\n" +
+                          $"Дистанция: {stats2.Distance:F1} км\n" +
+                          $"Время в пути: {hours2} ч {minutes2:D2} мин\n" +
+                          $"Количество перекрёсков: {path2.Count}";
             }
             else
             {
@@ -62,46 +74,27 @@ namespace NavigatorForms
                 path = logic.BFS(from.Id, to.Id);
 
                 //2. Считаем статистику пути
-                string stats = GetPathStats(path);
+                var stats = logic.CalculatePathStats(path);
 
-                //3. Выводим результат
-                message = $"ХАРАКТЕРИСТИКА МАРШРУТА:\n В маршруте {path.Count} перекрёстка(ков)\n{stats}";
+                int hours = (int)(stats.TimeMinutes / 60);
+                int minutes = (int)(stats.TimeMinutes % 60);
+
+                //3. Результат
+                message = $"Дистанция: {stats.Distance:F1} км\n" +
+                          $"Время в пути: {hours} ч {minutes:D2} мин\n" +
+                          $"Количество перекрёсков: {path.Count}";
             }
             
-
-            WayRichTextBox.Text = string.Join(" -> ", path.Select(v => v.Name));
+            WayRichTextBox.Text = GetPathAsString(path);
             // Отрисовываем основной путь (пока что)
             DrawMap(path);
             
             MessageBox.Show(message, "Результаты навигации", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        // Вспомогательный метод для подсчета длины и времени пути
-        private string GetPathStats(List<Vertex> path)
+        private string GetPathAsString(List<Vertex> path)
         {
-            if (path == null || path.Count < 2) return "Путь не найден";
-
-            double totalDistance = 0;
-            double totalMinutes = 0;
-
-            for (int i = 0; i < path.Count - 1; i++)
-            {
-                int id1 = path[i].Id;
-                int id2 = path[i + 1].Id;
-
-                var edge = G.GetEdges().FirstOrDefault(e =>
-                    (e.From == id1 && e.To == id2) || (e.From == id2 && e.To == id1));
-
-                if (edge != null)
-                {
-                    totalDistance += edge.Length;
-                    totalMinutes += edge.TimeMins;
-                }
-            }
-
-            int hours = (int)(totalMinutes / 60);
-            int minutes = (int)(totalMinutes % 60);
-
-            return $"Дистанция: {totalDistance:F1} км\nВремя: {hours} ч {minutes:D2} мин";
+            if (path == null || path.Count == 0) return "Путь не найден";
+            return string.Join(" -> ", path.Select(v => v.Name));
         }
         private void AltButton_Click(object sender, EventArgs e)
         {

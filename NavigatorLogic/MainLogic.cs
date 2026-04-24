@@ -17,72 +17,72 @@ namespace NavigatorLogic
             const string INCORRECT_TOWN = "Некорректная запись о городе!";
             const string INCORRECT_ROAD = "Некорректная запись о дороге!";
 
-            string textLine;
-            StreamReader F = new StreamReader(filePath);
-
-            while ((textLine = F.ReadLine()) != null)
+            StreamReader F = null;
+            try
             {
-                textLine = textLine.Trim();
-                //Скипаем комментарии
-                if (textLine.StartsWith("#"))
-                    continue;
-
-                string[] parts = textLine.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length == 0) continue; //Пустая строка
-                //Обрабатываем вершины(Города)
-                if (parts[0] == "V")
+                F = new StreamReader(filePath);
+                string textLine;
+                while ((textLine = F.ReadLine()) != null)
                 {
-                    int id; float x, y; string name;
-                    try
-                    {
-                        if (parts.Length < 5) throw new IndexOutOfRangeException(INCORRECT_TOWN);
-                        id = int.Parse(parts[1]);
-                        x = float.Parse(parts[2]);
-                        y = float.Parse(parts[3]);
-                        //Получаем имя города и сразу проводим валидацию
-                        name = parts[4];
-                        if (string.IsNullOrEmpty(name))
-                            throw new ArgumentNullException(TOWN_NAME_ERROR);
-                    }
-                    catch (FormatException)
-                    {
-                        throw new FormatException(FORMAT_ERROR);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                    G.AddVertex(id, x, y, name);
-                }
-                //Обрабатываем ребра(Дороги между городами)
-                else if (parts[0] == "E")
-                {
-                    int from, to; 
-                    double length; 
-                    double speed = 45.0;
-                    try
-                    {
-                        if (parts.Length < 4) throw new IndexOutOfRangeException(INCORRECT_ROAD);
-                        from = int.Parse(parts[1]);
-                        to = int.Parse(parts[2]);
-                        length = double.Parse(parts[3]);
+                    textLine = textLine.Trim();
 
-                        if (parts.Length >= 5) speed = double.Parse(parts[4]);
-                    }
-                    catch (FormatException)
+                    // Пропускаем комментарии и пустые строки
+                    if (textLine.StartsWith("#") || string.IsNullOrEmpty(textLine))
+                        continue;
+
+                    string[] parts = textLine.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 0) continue;
+
+                    // Обрабатываем вершины
+                    if (parts[0] == "V")
                     {
-                        throw new FormatException(FORMAT_ERROR);
+                        int id; float x, y; string name;
+                        try
+                        {
+                            if (parts.Length < 5) throw new IndexOutOfRangeException(INCORRECT_TOWN);
+                            id = int.Parse(parts[1]);
+                            x = float.Parse(parts[2]);
+                            y = float.Parse(parts[3]);
+                            name = parts[4];
+                            if (string.IsNullOrEmpty(name))
+                                throw new ArgumentNullException(TOWN_NAME_ERROR);
+                        }
+                        catch (FormatException)
+                        {
+                            throw new FormatException(FORMAT_ERROR);
+                        }
+                        G.AddVertex(id, x, y, name);
                     }
-                    catch (Exception ex)
+                    // Обрабатываем рёбра
+                    else if (parts[0] == "E")
                     {
-                        throw new Exception(ex.Message);
+                        int from, to;
+                        double length;
+                        double speed = 45.0;
+                        try
+                        {
+                            if (parts.Length < 4) throw new IndexOutOfRangeException(INCORRECT_ROAD);
+                            from = int.Parse(parts[1]);
+                            to = int.Parse(parts[2]);
+                            length = double.Parse(parts[3]);
+
+                            if (parts.Length >= 5) speed = double.Parse(parts[4]);
+                        }
+                        catch (FormatException)
+                        {
+                            throw new FormatException(FORMAT_ERROR);
+                        }
+                        G.AddEdge(from, to, length, speed);
+                        G.AddEdge(to, from, length, speed);
                     }
-                    G.AddEdge(from, to, length, speed);
-                    G.AddEdge(to, from, length, speed);
+                    else throw new FormatException(FORMAT_ERROR);
                 }
-                else throw new FormatException(FORMAT_ERROR);
             }
-            F.Close();
+            finally
+            {
+                // Гарантированно закрываем файл даже если внутри try произошло исключение
+                F?.Close();
+            }
             return G;
         }
         /// <summary>
@@ -90,6 +90,11 @@ namespace NavigatorLogic
         /// </summary>
         public List<Vertex> Dijkstra(int from, int to, bool useTime, Edge edgeToIgnore = null)
         {
+            //Проверка на сущесчтвование вершины
+            var allVertices = G.GetVertices();
+            if (!allVertices.Any(v => v.Id == from) || !allVertices.Any(v => v.Id == to))
+                return new List<Vertex>(); // Возвращаем пустой путь
+
             var visited = new Dictionary<int, bool>();
             var dist = new Dictionary<int, double>();
             Parents = new Dictionary<int, int>();
@@ -242,6 +247,35 @@ namespace NavigatorLogic
             }
 
             return ReconstructPath(from, to);
+        }
+        /// <summary>
+        /// Рассчитывает статистику пути: общую дистанцию и время.
+        /// Возвращает кортеж (distance, timeMinutes).
+        /// </summary>
+        public (double Distance, double TimeMinutes) CalculatePathStats(List<Vertex> path)
+        {
+            if (path == null || path.Count < 2)
+                return (0, 0);
+
+            double totalDistance = 0;
+            double totalTime = 0;
+
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                int id1 = path[i].Id;
+                int id2 = path[i + 1].Id;
+
+                var edge = G.GetEdges().FirstOrDefault(e =>
+                    (e.From == id1 && e.To == id2) || (e.From == id2 && e.To == id1));
+
+                if (edge != null)
+                {
+                    totalDistance += edge.Length;
+                    totalTime += edge.TimeMins;
+                }
+            }
+
+            return (totalDistance, totalTime);
         }
     }
 }

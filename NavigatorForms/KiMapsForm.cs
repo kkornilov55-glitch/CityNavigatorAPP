@@ -41,15 +41,20 @@ namespace NavigatorForms
                 return;
             }
 
-            var sw = Stopwatch.StartNew();
             if (!BFS_СheckBox.Checked)
             {
                 //1. Находим основной путь
+                var sw1 = Stopwatch.StartNew();
                 path = logic.Dijkstra(from.Id, to.Id, FastestWayCheckBox.Checked);
+                sw1.Stop();
                 lastPath = path;
+                long dijkstraTime = sw1.ElapsedMilliseconds;
 
                 //2. Находим альтернативный путь (в обход самой длинной дороги)
+                var sw2 = Stopwatch.StartNew();
                 var path2 = logic.FindAlternativePath(from.Id, to.Id, path, FastestWayCheckBox.Checked);
+                sw2.Stop();
+                long altTime = sw2.ElapsedMilliseconds;
 
                 //3. Считаем статистику для обоих путей
                 var stats1 = logic.CalculatePathStats(path);
@@ -64,17 +69,22 @@ namespace NavigatorForms
                 message = $"ОСНОВНОЙ МАРШРУТ:\n" +
                           $"Дистанция: {stats1.Distance:F1} км\n" +
                           $"Время в пути: {hours1} ч {minutes1:D2} мин\n" +
-                          $"Количество перекрёсков: {path.Count}\n\n" +
+                          $"Количество перекрёсков: {path.Count}\n" +
+                          $"Время расчёта: {dijkstraTime} мс\n\n" +
 
                           $"АЛЬТЕРНАТИВНЫЙ:\n" +
                           $"Дистанция: {stats2.Distance:F1} км\n" +
                           $"Время в пути: {hours2} ч {minutes2:D2} мин\n" +
-                          $"Количество перекрёсков: {path2.Count}";
+                          $"Количество перекрёсков: {path2.Count}" +
+                          $"Время расчёта: {altTime} мс";
             }
             else
             {
                 //1. Находим путь
+                var sw = Stopwatch.StartNew();
                 path = logic.BFS(from.Id, to.Id);
+                sw.Stop();
+                long bfsTime = sw.ElapsedMilliseconds;
 
                 //2. Считаем статистику пути
                 var stats = logic.CalculatePathStats(path);
@@ -85,10 +95,9 @@ namespace NavigatorForms
                 //3. Результат
                 message = $"Дистанция: {stats.Distance:F1} км\n" +
                           $"Время в пути: {hours} ч {minutes:D2} мин\n" +
-                          $"Количество перекрёсков: {path.Count}";
+                          $"Количество перекрёсков: {path.Count}" +
+                          $"Время работы алгоритма: {bfsTime} мс";
             }
-            sw.Stop();
-            message += $"\n\nВремя работы алгоритма: {sw.ElapsedMilliseconds} мс";
 
             WayRichTextBox.Text = GetPathAsString(path);
             // Отрисовываем основной путь (пока что)

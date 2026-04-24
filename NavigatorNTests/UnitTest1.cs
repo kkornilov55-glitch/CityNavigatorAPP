@@ -169,7 +169,7 @@ namespace NavigatorNTests
 
         #endregion
 
-        #region 3. Статистика, альтернативные пути и парсинг (10 тестов)
+        #region 3. Статистика, альтернативные пути и парсинг (11 тестов)
 
         [Test]
         public void CalculatePathStats_CorrectDistanceAndTime()

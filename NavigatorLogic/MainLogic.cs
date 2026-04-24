@@ -203,5 +203,45 @@ namespace NavigatorLogic
 
             return new List<Vertex>();
         }
+        /// <summary>
+        /// Поиск в ширину (BFS). Находит путь с минимальным количеством перекрёстков.
+        /// </summary>
+        public List<Vertex> BFS(int from, int to)
+        {
+            var visited = new Dictionary<int, bool>();
+            Parents = new Dictionary<int, int>();
+            var queue = new Queue<int>();
+
+            foreach (var v in G.GetVertices())
+            {
+                visited[v.Id] = false;
+                Parents[v.Id] = -1;
+            }
+
+            visited[from] = true;
+            queue.Enqueue(from);
+
+            while (queue.Count > 0)
+            {
+                int u = queue.Dequeue();
+                if (u == to) break; // Путь найден
+
+                foreach (var e in G.GetEdges())
+                {
+                    int v = -1;
+                    if (e.From == u) v = e.To;
+                    else if (e.To == u) v = e.From;
+
+                    if (v != -1 && !visited[v])
+                    {
+                        visited[v] = true;
+                        Parents[v] = u;
+                        queue.Enqueue(v);
+                    }
+                }
+            }
+
+            return ReconstructPath(from, to);
+        }
     }
 }

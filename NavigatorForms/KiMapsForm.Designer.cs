@@ -37,6 +37,7 @@
             AltButton = new Button();
             FastestWayCheckBox = new CheckBox();
             WayRichTextBox = new RichTextBox();
+            BFS_СheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)GraphPictureBox).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -53,7 +54,7 @@
             // StartButton
             // 
             StartButton.Font = new Font("Segoe UI", 14F);
-            StartButton.Location = new Point(552, 5);
+            StartButton.Location = new Point(820, 4);
             StartButton.Name = "StartButton";
             StartButton.Size = new Size(265, 43);
             StartButton.TabIndex = 1;
@@ -64,7 +65,7 @@
             // FromComboBox
             // 
             FromComboBox.FormattingEnabled = true;
-            FromComboBox.Location = new Point(208, 17);
+            FromComboBox.Location = new Point(476, 16);
             FromComboBox.Name = "FromComboBox";
             FromComboBox.Size = new Size(132, 28);
             FromComboBox.TabIndex = 2;
@@ -72,7 +73,7 @@
             // ToComboBox
             // 
             ToComboBox.FormattingEnabled = true;
-            ToComboBox.Location = new Point(414, 18);
+            ToComboBox.Location = new Point(682, 17);
             ToComboBox.Name = "ToComboBox";
             ToComboBox.Size = new Size(132, 28);
             ToComboBox.TabIndex = 3;
@@ -81,7 +82,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F);
-            label1.Location = new Point(357, 4);
+            label1.Location = new Point(625, 3);
             label1.Name = "label1";
             label1.Size = new Size(51, 41);
             label1.TabIndex = 4;
@@ -89,6 +90,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(BFS_СheckBox);
             panel1.Controls.Add(AltButton);
             panel1.Controls.Add(FastestWayCheckBox);
             panel1.Controls.Add(StartButton);
@@ -104,7 +106,7 @@
             // AltButton
             // 
             AltButton.Font = new Font("Segoe UI", 14F);
-            AltButton.Location = new Point(852, 5);
+            AltButton.Location = new Point(1091, 4);
             AltButton.Name = "AltButton";
             AltButton.Size = new Size(169, 43);
             AltButton.TabIndex = 6;
@@ -132,6 +134,16 @@
             WayRichTextBox.Size = new Size(1494, 28);
             WayRichTextBox.TabIndex = 7;
             WayRichTextBox.Text = "";
+            // 
+            // BFS_СheckBox
+            // 
+            BFS_СheckBox.AutoSize = true;
+            BFS_СheckBox.Location = new Point(195, 17);
+            BFS_СheckBox.Name = "BFS_СheckBox";
+            BFS_СheckBox.Size = new Size(264, 24);
+            BFS_СheckBox.TabIndex = 7;
+            BFS_СheckBox.Text = "Путь с минимумом перекрёстков";
+            BFS_СheckBox.UseVisualStyleBackColor = true;
             // 
             // KiMapsForm
             // 
@@ -161,5 +173,6 @@
         private CheckBox FastestWayCheckBox;
         private Button AltButton;
         private RichTextBox WayRichTextBox;
+        private CheckBox BFS_СheckBox;
     }
 }

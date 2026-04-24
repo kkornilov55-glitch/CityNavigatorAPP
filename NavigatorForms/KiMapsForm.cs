@@ -32,26 +32,47 @@ namespace NavigatorForms
 
             if (from == null || to == null) return;
 
-            // 1. Находим основной путь
-            var path1 = logic.Dijkstra(from.Id, to.Id, FastestWayCheckBox.Checked);
-            lastPath = path1;
+            List<Vertex> path;
+            string message;
+            if (BFS_СheckBox.Checked && FastestWayCheckBox.Checked)
+            {
+                MessageBox.Show("Пожалуйста, выбирите одну из галочек!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (!BFS_СheckBox.Checked)
+            {
+                //1. Находим основной путь
+                path = logic.Dijkstra(from.Id, to.Id, FastestWayCheckBox.Checked);
+                lastPath = path;
 
-            // 2. Находим альтернативный путь (в обход самой длинной дороги)
-            var path2 = logic.FindAlternativePath(from.Id, to.Id, path1, FastestWayCheckBox.Checked);
+                //2. Находим альтернативный путь (в обход самой длинной дороги)
+                var path2 = logic.FindAlternativePath(from.Id, to.Id, path, FastestWayCheckBox.Checked);
 
-            WayRichTextBox.Text = string.Join(" -> ", path1.Select(v => v.Name));
+                //3. Считаем статистику для обоих путей
+                string stats1 = GetPathStats(path);
+                string stats2 = path2.Count > 1 ? GetPathStats(path2) : "Альтернативный путь не найден.";
+
+                //4. Выводим результат
+                message = $"ОСНОВНОЙ МАРШРУТ:\n{stats1}\n\n" +
+                          $"АЛЬТЕРНАТИВНЫЙ:\n{stats2}";
+            }
+            else
+            {
+                //1. Находим путь
+                path = logic.BFS(from.Id, to.Id);
+
+                //2. Считаем статистику пути
+                string stats = GetPathStats(path);
+
+                //3. Выводим результат
+                message = $"ХАРАКТЕРИСТИКА МАРШРУТА:\n В маршруте {path.Count} перекрёстка(ков)\n{stats}";
+            }
+            
+
+            WayRichTextBox.Text = string.Join(" -> ", path.Select(v => v.Name));
             // Отрисовываем основной путь (пока что)
-            DrawMap(path1);
-
-
-            // 3. Считаем статистику для обоих путей
-            string stats1 = GetPathStats(path1);
-            string stats2 = path2.Count > 1 ? GetPathStats(path2) : "Альтернативный путь не найден.";
-
-            // 4. Выводим результат
-            string message = $"ОСНОВНОЙ МАРШРУТ:\n{stats1}\n\n" +
-                             $"АЛЬТЕРНАТИВНЫЙ:\n{stats2}";
-
+            DrawMap(path);
+            
             MessageBox.Show(message, "Результаты навигации", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         // Вспомогательный метод для подсчета длины и времени пути
@@ -73,7 +94,7 @@ namespace NavigatorForms
                 if (edge != null)
                 {
                     totalDistance += edge.Length;
-                    totalMinutes += edge.TimeMins; // Убедись, что у Edge есть свойство TimeMins
+                    totalMinutes += edge.TimeMins;
                 }
             }
 

@@ -1,4 +1,5 @@
 using NavigatorLogic;
+using System.Diagnostics;
 
 namespace NavigatorForms
 {
@@ -39,6 +40,8 @@ namespace NavigatorForms
                 MessageBox.Show("Пожалуйста, выбирите одну из галочек!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            var sw = Stopwatch.StartNew();
             if (!BFS_СheckBox.Checked)
             {
                 //1. Находим основной путь
@@ -84,7 +87,9 @@ namespace NavigatorForms
                           $"Время в пути: {hours} ч {minutes:D2} мин\n" +
                           $"Количество перекрёсков: {path.Count}";
             }
-            
+            sw.Stop();
+            message += $"\n\nВремя работы алгоритма: {sw.ElapsedMilliseconds} мс";
+
             WayRichTextBox.Text = GetPathAsString(path);
             // Отрисовываем основной путь (пока что)
             DrawMap(path);

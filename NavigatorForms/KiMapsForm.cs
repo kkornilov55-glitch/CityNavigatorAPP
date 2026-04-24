@@ -51,10 +51,7 @@ namespace NavigatorForms
                 long dijkstraTime = sw1.ElapsedMilliseconds;
 
                 //2. Находим альтернативный путь (в обход самой длинной дороги)
-                var sw2 = Stopwatch.StartNew();
                 var path2 = logic.FindAlternativePath(from.Id, to.Id, path, FastestWayCheckBox.Checked);
-                sw2.Stop();
-                long altTime = sw2.ElapsedMilliseconds;
 
                 //3. Считаем статистику для обоих путей
                 var stats1 = logic.CalculatePathStats(path);
@@ -75,8 +72,7 @@ namespace NavigatorForms
                           $"АЛЬТЕРНАТИВНЫЙ:\n" +
                           $"Дистанция: {stats2.Distance:F1} км\n" +
                           $"Время в пути: {hours2} ч {minutes2:D2} мин\n" +
-                          $"Количество перекрёсков: {path2.Count}" +
-                          $"Время расчёта: {altTime} мс";
+                          $"Количество перекрёсков: {path2.Count}";
             }
             else
             {

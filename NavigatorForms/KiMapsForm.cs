@@ -91,7 +91,7 @@ namespace NavigatorForms
                 //3. Результат
                 message = $"Дистанция: {stats.Distance:F1} км\n" +
                           $"Время в пути: {hours} ч {minutes:D2} мин\n" +
-                          $"Количество перекрёсков: {path.Count}" +
+                          $"Количество перекрёсков: {path.Count}\n" +
                           $"Время работы алгоритма: {bfsTime} мс";
             }
 

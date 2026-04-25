@@ -34,10 +34,10 @@
             ToComboBox = new ComboBox();
             label1 = new Label();
             panel1 = new Panel();
+            BFS_СheckBox = new CheckBox();
             AltButton = new Button();
             FastestWayCheckBox = new CheckBox();
             WayRichTextBox = new RichTextBox();
-            BFS_СheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)GraphPictureBox).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -64,18 +64,22 @@
             // 
             // FromComboBox
             // 
+            FromComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             FromComboBox.FormattingEnabled = true;
             FromComboBox.Location = new Point(476, 16);
             FromComboBox.Name = "FromComboBox";
             FromComboBox.Size = new Size(132, 28);
+            FromComboBox.Sorted = true;
             FromComboBox.TabIndex = 2;
             // 
             // ToComboBox
             // 
+            ToComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             ToComboBox.FormattingEnabled = true;
             ToComboBox.Location = new Point(682, 17);
             ToComboBox.Name = "ToComboBox";
             ToComboBox.Size = new Size(132, 28);
+            ToComboBox.Sorted = true;
             ToComboBox.TabIndex = 3;
             // 
             // label1
@@ -102,6 +106,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1494, 58);
             panel1.TabIndex = 5;
+            // 
+            // BFS_СheckBox
+            // 
+            BFS_СheckBox.AutoSize = true;
+            BFS_СheckBox.Location = new Point(195, 17);
+            BFS_СheckBox.Name = "BFS_СheckBox";
+            BFS_СheckBox.Size = new Size(264, 24);
+            BFS_СheckBox.TabIndex = 7;
+            BFS_СheckBox.Text = "Путь с минимумом перекрёстков";
+            BFS_СheckBox.UseVisualStyleBackColor = true;
             // 
             // AltButton
             // 
@@ -134,16 +148,6 @@
             WayRichTextBox.Size = new Size(1494, 28);
             WayRichTextBox.TabIndex = 7;
             WayRichTextBox.Text = "";
-            // 
-            // BFS_СheckBox
-            // 
-            BFS_СheckBox.AutoSize = true;
-            BFS_СheckBox.Location = new Point(195, 17);
-            BFS_СheckBox.Name = "BFS_СheckBox";
-            BFS_СheckBox.Size = new Size(264, 24);
-            BFS_СheckBox.TabIndex = 7;
-            BFS_СheckBox.Text = "Путь с минимумом перекрёстков";
-            BFS_СheckBox.UseVisualStyleBackColor = true;
             // 
             // KiMapsForm
             // 

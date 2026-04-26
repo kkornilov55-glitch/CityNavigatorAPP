@@ -191,12 +191,15 @@ namespace NavigatorLogic
                 var edge = G.GetEdges().FirstOrDefault(e =>
                     (e.From == u && e.To == v) || (e.From == v && e.To == u));
 
-                double weight = useTime ? edge.TimeMins : edge.Length;
-
-                if (edge != null && weight > maxLen)
+                if (edge != null)
                 {
-                    maxLen = weight;
-                    longestEdge = edge;
+                    double weight = useTime ? edge.TimeMins : edge.Length;
+
+                    if (weight > maxLen)
+                    {
+                        maxLen = weight;
+                        longestEdge = edge;
+                    }
                 }
             }
 

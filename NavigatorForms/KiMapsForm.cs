@@ -98,7 +98,9 @@ namespace NavigatorForms
             WayRichTextBox.Text = GetPathAsString(path);
             // Отрисовываем основной путь (пока что)
             DrawMap(path);
-            
+
+            if (lastPath != null) AltButton.Visible = true;
+
             MessageBox.Show(message, "Результаты навигации", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private string GetPathAsString(List<Vertex> path)
@@ -317,6 +319,18 @@ namespace NavigatorForms
             {
                 MessageBox.Show("Ошибка, файл с графом не найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+        }
+
+        private void BFS_СheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (BFS_СheckBox.Checked)
+            {
+                AltButton.Visible = false;
+            }
+            else if (lastPath != null && !BFS_СheckBox.Checked)
+            {
+                AltButton.Visible = true;
             }
         }
     }

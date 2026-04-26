@@ -119,8 +119,8 @@ namespace NavigatorLogic
                 visited[u] = true;
                 if (u == to) break;
 
-                // Перебор всех рёбер в поиске соседей вершины u
-                foreach (Edge e in G.GetEdges())
+                // Перебор всех соседей вершины u
+                foreach (Edge e in G.GetNeighbors(u))
                 {
                     //  БЛОКИРОВКА: Если это та дорога, которую нужно объехать — пропускаем её
                     if (edgeToIgnore != null)
@@ -231,7 +231,7 @@ namespace NavigatorLogic
                 int u = queue.Dequeue();
                 if (u == to) break; // Путь найден
 
-                foreach (var e in G.GetEdges())
+                foreach (var e in G.GetNeighbors(u))
                 {
                     int v = -1;
                     if (e.From == u) v = e.To;

@@ -116,6 +116,7 @@
             BFS_СheckBox.TabIndex = 7;
             BFS_СheckBox.Text = "Путь с минимумом перекрёстков";
             BFS_СheckBox.UseVisualStyleBackColor = true;
+            BFS_СheckBox.CheckedChanged += BFS_СheckBox_CheckedChanged;
             // 
             // AltButton
             // 
@@ -126,6 +127,7 @@
             AltButton.TabIndex = 6;
             AltButton.Text = "Другой путь";
             AltButton.UseVisualStyleBackColor = true;
+            AltButton.Visible = false;
             AltButton.Click += AltButton_Click;
             // 
             // FastestWayCheckBox
